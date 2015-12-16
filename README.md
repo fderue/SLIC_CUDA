@@ -1,2 +1,2 @@
 # SLIC_CUDA
-Slic superpixel segmenentation gpu implementation with cuda
+Slic superpixel segmentation gpu implementation with cuda
