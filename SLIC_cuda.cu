@@ -2,7 +2,7 @@
 
 
 #include "SLIC_cuda.h"
-#define MAX_DIST 300000000
+#define MAX_DIST FLT_MAX
 #define NNEIGH 3
 
 
@@ -32,6 +32,7 @@ __device__ int convertIdx(int2 wg, int lc_idx,int nBloc_per_row){
 
     int2 relPos2D = make_int2(lc_idx%5-2,lc_idx/5-2);
     int2 glPos2D = wg+relPos2D;
+	
 
     return glPos2D.y*nBloc_per_row+glPos2D.x;
 }
@@ -446,7 +447,7 @@ __host__ void SLIC_cuda::InitBuffers() {
 	resDescLab.res.array.array = frameLab_array;
 	gpuErrchk(cudaCreateSurfaceObject(&frameLab_surf, &resDescLab));
 #else
-	cudaBindSurfaceToArray(frameLab_surf, frameLab_array);
+	cudaBindSurfaceToArray(&frameLab_surf, frameLab_array, &channelDescrLab);
 #endif
 
 	// surface labels
@@ -460,7 +461,7 @@ __host__ void SLIC_cuda::InitBuffers() {
 	gpuErrchk(cudaCreateSurfaceObject(&labels_surf, &resDescLabels));
 
 #else
-	cudaBindSurfaceToArray(labels_surf, labels_array);
+	cudaBindSurfaceToArray(&labels_surf, labels_array, &channelDescrLabels);
 #endif
 
 	// buffers clusters , accAtt

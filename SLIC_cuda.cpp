@@ -30,7 +30,7 @@ void SLIC_cuda::Initialize(cv::Mat &frame0) {
     InitBuffers();
 }
 void SLIC_cuda::Segment(cv::Mat &frame) {
-
+	m_nSpx = m_nPx / m_areaSpx;//reinit m_nSpx because of enforceConnectivity
     SendFrame(frame); //ok
     InitClusters();//ok
 
