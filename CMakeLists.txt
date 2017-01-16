@@ -18,6 +18,7 @@ message(STATUS "Found OpenCV >=3.0 at '${OpenCV_DIR}'")
 
 ### CUDA CHECK 
 find_package(CUDA REQUIRED)
+set(CUDA_COMPUTE_CAPABILITY "20")
 set(CUDA_GENERATE_CODE "arch=compute_${CUDA_COMPUTE_CAPABILITY},code=sm_${CUDA_COMPUTE_CAPABILITY}" CACHE STRING "Which GPU architectures to generate code for (each arch/code pair will be passed as --generate-code option to nvcc, separate multiple pairs by ;)")
 set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch compute_${CUDA_COMPUTE_CAPABILITY})
 
