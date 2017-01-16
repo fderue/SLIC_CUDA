@@ -1,4 +1,4 @@
-#include "SLIC_cuda.h"
+#include "SlicCuda.h"
 
 
 #if __CUDA_ARCH__<300
@@ -396,7 +396,7 @@ __global__ void k_update(int nSpx, float* clusters, float* accAtt_g)
 
 //============== wrapper =================
 
-__host__ void SLIC_cuda::InitBuffers() {
+__host__ void SlicCuda::InitBuffers() {
 	//allocate buffers on gpu
 	//gpuErrchk(cudaMalloc((void**)&frameBGRA_g, m_nPx*sizeof(uchar4))); //4 channels for padding
 
@@ -469,7 +469,7 @@ __host__ void SLIC_cuda::InitBuffers() {
 
 
 #if __CUDA_ARCH__>=300
-__host__ void SLIC_cuda::Rgb2CIELab(cudaTextureObject_t inputImg, cudaSurfaceObject_t outputImg, int width, int height)
+__host__ void SlicCuda::Rgb2CIELab(cudaTextureObject_t inputImg, cudaSurfaceObject_t outputImg, int width, int height)
 {
 	int side = 16;
 	dim3 threadsPerBlock(side, side);
@@ -477,7 +477,7 @@ __host__ void SLIC_cuda::Rgb2CIELab(cudaTextureObject_t inputImg, cudaSurfaceObj
 	kRgb2CIELab << <numBlocks, threadsPerBlock >> >(inputImg, outputImg, width, height);
 }
 #else
-__host__ void SLIC_cuda::Rgb2CIELab(int width, int height)
+__host__ void SlicCuda::Rgb2CIELab(int width, int height)
 {
 	int side = 16;
 	dim3 threadsPerBlock(side, side);
@@ -486,7 +486,7 @@ __host__ void SLIC_cuda::Rgb2CIELab(int width, int height)
 }
 #endif
 
-__host__ void SLIC_cuda::InitClusters()
+__host__ void SlicCuda::InitClusters()
 {
 	dim3 threadsPerBlock(NMAX_THREAD);
 	dim3 numBlocks(iDivUp(m_nSpx, NMAX_THREAD));
@@ -496,7 +496,7 @@ __host__ void SLIC_cuda::InitClusters()
 	k_initClusters << <numBlocks, threadsPerBlock >> >(clusters_g, m_width, m_height, m_width / m_wSpx, m_height / m_hSpx);
 #endif
 }
-__host__ void SLIC_cuda::Assignement() {
+__host__ void SlicCuda::Assignement() {
 
 	int hMax = NMAX_THREAD / m_hSpx;
 	int nBlockPerClust = iDivUp(m_hSpx, hMax);
@@ -514,7 +514,7 @@ __host__ void SLIC_cuda::Assignement() {
 
 #endif
 }
-__host__ void SLIC_cuda::Update()
+__host__ void SlicCuda::Update()
 {
 	dim3 threadsPerBlock(NMAX_THREAD);
 	dim3 numBlocks(iDivUp(m_nSpx, NMAX_THREAD));

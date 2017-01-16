@@ -32,7 +32,7 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort =
 }
 
 
-class SLIC_cuda {
+class SlicCuda {
 public:
 	static enum InitType{
 		SLIC_SIZE,
@@ -86,10 +86,12 @@ private:
 	void Update(); // Update
 
 public:
-	SLIC_cuda(){}
-	~SLIC_cuda();
+	SlicCuda(){}
+	SlicCuda(const cv::Mat& frame0, const int diamSpxOrNbSpx = 15, const InitType initType = SLIC_SIZE, const float wc = 35, const int nbIteration = 5);
+	
+	~SlicCuda();
 
-	void Initialize(cv::Mat& frame0, int diamSpx_or_Nspx, float wc, int nIteration = 5, InitType initType = SLIC_SIZE);
+	void initialize(cv::Mat& frame0, int diamSpx_or_Nspx, float wc, int nIteration = 5, InitType initType = SLIC_SIZE);
 	void Segment(cv::Mat& frame); // gpu superpixel segmentation
 	int getNspx(){ return m_nSpx; }
 	cv::Mat getLabels(){ return cv::Mat(m_height, m_width, CV_32F, m_labels); }

@@ -1,9 +1,9 @@
 #include <driver_types.h>
-#include "SLIC_cuda.h"
+#include "SlicCuda.h"
 
 using namespace std;
 
-SLIC_cuda::~SLIC_cuda(){
+SlicCuda::~SlicCuda(){
 	delete[] m_clusters;
 	delete[] m_labels;
 	gpuErrchk(cudaFree(clusters_g));
@@ -12,7 +12,7 @@ SLIC_cuda::~SLIC_cuda(){
 	gpuErrchk(cudaFreeArray(frameLab_array));
 	gpuErrchk(cudaFreeArray(labels_array));
 }
-void SLIC_cuda::Initialize(cv::Mat &frame0, int diamSpx_or_Nspx, float wc, int nIteration, SLIC_cuda::InitType initType) {
+void SlicCuda::initialize(cv::Mat &frame0, int diamSpx_or_Nspx, float wc, int nIteration, SlicCuda::InitType initType) {
 	m_nIteration = nIteration;
 	m_width = frame0.cols;
 	m_height = frame0.rows;
@@ -33,7 +33,7 @@ void SLIC_cuda::Initialize(cv::Mat &frame0, int diamSpx_or_Nspx, float wc, int n
 
 	InitBuffers();
 }
-void SLIC_cuda::Segment(cv::Mat &frame) {
+void SlicCuda::Segment(cv::Mat &frame) {
 	m_nSpx = m_nPx / m_areaSpx;//reinit m_nSpx because of enforceConnectivity
 	SendFrame(frame); //ok
 	InitClusters();//ok
@@ -48,7 +48,7 @@ void SLIC_cuda::Segment(cv::Mat &frame) {
 	enforceConnectivity();
 }
 
-void SLIC_cuda::SendFrame(cv::Mat& frameBGR){
+void SlicCuda::SendFrame(cv::Mat& frameBGR){
 
 	cv::Mat frameBGRA;
 	cv::cvtColor(frameBGR, frameBGRA, CV_BGR2BGRA);
@@ -63,12 +63,12 @@ void SLIC_cuda::SendFrame(cv::Mat& frameBGR){
 #endif
 }
 
-void SLIC_cuda::getLabelsFromGpu()
+void SlicCuda::getLabelsFromGpu()
 {
 	cudaMemcpyFromArray(m_labels, labels_array, 0, 0, m_nPx* sizeof(float), cudaMemcpyDeviceToHost);
 }
 
-void SLIC_cuda::enforceConnectivity()
+void SlicCuda::enforceConnectivity()
 {
 	int label = 0, adjlabel = 0;
 	int lims = (m_width * m_height) / (m_nSpx);
@@ -137,14 +137,14 @@ void SLIC_cuda::enforceConnectivity()
 		m_labels[i*m_width + j] = newLabels[i][j];
 }
 
-void SLIC_cuda::displayBound(cv::Mat &image, cv::Scalar colour)
+void SlicCuda::displayBound(cv::Mat &image, cv::Scalar colour)
 {
 	//load label from gpu
 
 	const int dx8[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
 	const int dy8[8] = { 0, -1, -1, -1, 0, 1, 1, 1 };
 
-	/* Initialize the contour vector and the matrix detailing whether a pixel
+	/* initialize the contour vector and the matrix detailing whether a pixel
 	* is already taken to be a contour. */
 	vector<cv::Point> contours;
 	vector<vector<bool> > istaken;
