@@ -5,7 +5,7 @@ Achanta et al. [PAMI 2012, vol. 34, num. 11, pp. 2274-2282]
 
 Library required :
 Opencv 3.0 min
-CUDA
+CUDA arch>=2.0
 
 Author : Derue François-Xavier
 francois.xavier.derue@gmail.com

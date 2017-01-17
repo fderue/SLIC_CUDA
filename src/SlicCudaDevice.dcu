@@ -35,6 +35,11 @@ __global__ void kRgb2CIELab(const int width, const int height)
 		fPixel.z = b;
 		fPixel.w = 0;
 
+		fPixel.x = (float)nPixel.x;
+		fPixel.y =  (float)nPixel.y;
+		fPixel.z =  (float)nPixel.z;
+		fPixel.w =  (float)nPixel.w;
+
 		surf2Dwrite(fPixel, surfFrameLab, px * 16, py);
 	}
 }

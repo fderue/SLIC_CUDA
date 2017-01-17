@@ -91,6 +91,10 @@ void SlicCuda::uploadFrame(const Mat& frameBGR) {
 	CV_Assert(frameBGRA.isContinuous());
 	gpuErrchk(cudaMemcpyToArray(cuArrayFrameBGRA, 0, 0, (uchar*)frameBGRA.data, m_nbPx* sizeof(uchar4), cudaMemcpyHostToDevice));
 
+	/*uchar* dst = new uchar[4 * m_nbPx];
+	cudaMemcpyFromArray(dst, cuArrayFrameBGRA, 0, 0, m_nbPx*sizeof(uchar4), cudaMemcpyDeviceToHost);
+	Mat matDst(m_FrameHeight, m_FrameWidth, CV_8UC4, dst);
+	cout << matDst << endl;*/
 }
 
 void SlicCuda::gpuRGBA2Lab() {
@@ -102,6 +106,11 @@ void SlicCuda::gpuRGBA2Lab() {
 
 	kRgb2CIELab << <numBlocks, threadsPerBlock >> >(m_FrameWidth, m_FrameHeight);
 
+	/*float* dst = new float[4 * m_nbPx];
+	cudaMemcpyFromArray(dst, cuArrayFrameLab, 0, 0, m_nbPx*sizeof(float4), cudaMemcpyDeviceToHost);
+	Mat matDst(m_FrameHeight, m_FrameWidth, CV_32FC4, dst);
+	cout << matDst << endl;*/
+
 }
 
 void SlicCuda::gpuInitClusters() {
@@ -110,6 +119,12 @@ void SlicCuda::gpuInitClusters() {
 	dim3 numBlocks(iDivUp(m_nbSpx, blockW));
 
 	kInitClusters << <numBlocks, threadsPerBlock >> >(m_FrameWidth, m_FrameHeight, m_FrameWidth / m_SpxWidth, m_FrameHeight / m_SpxHeight, d_fClusters);
+
+
+	/*float* fTmp = new float[m_nbSpx * 5];
+	cudaMemcpy(fTmp, d_fClusters, m_nbSpx * 5 * sizeof(float), cudaMemcpyDeviceToHost);
+	Mat matTmp(1, m_nbSpx * 5, CV_32F, fTmp);
+	cout << matTmp << endl;*/
 }
 
 void SlicCuda::assignment(){

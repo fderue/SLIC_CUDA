@@ -8,7 +8,7 @@ using namespace cv;
 
 int main() {
  
-	VideoCapture cap("E:/Videos/CVPR_benchmark/basketball/img/%04d.jpg"); //change with your videopath
+	VideoCapture cap("E:/Videos/CVPR_benchmark/bolt/img/%04d.jpg"); //change with your videopath
 
 	// Parameters
 	int diamSpx = 15;
