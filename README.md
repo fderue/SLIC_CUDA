@@ -3,6 +3,13 @@ Superpixel Segmentation SLIC of Achanta et al. [PAMI 2012, vol. 34, num. 11, pp.
 
 GPU version with CUDA
 
+Library required :
+
+OpenCv 3.0 min
+
+Cuda compute capability 2.0 min
+
+
   Cuda : 30 fps
 <p align="center">
   <img src="https://cloud.githubusercontent.com/assets/10605043/17391166/fceb718c-59e1-11e6-8251-7ca9b90287e5.gif" width="700"/>
